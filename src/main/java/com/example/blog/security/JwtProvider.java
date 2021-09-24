@@ -9,9 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-
-
-
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -33,4 +31,22 @@ public class JwtProvider {
 				.signWith(key)
 				.compact();
 	}
+	
+	public boolean validateToken(String jwt){
+		Jwts.parser().setSigningKey(key).parseClaimsJwt(jwt);
+		return true;
+	}
+	
+	public String getUsernameFromJWT(String token) {
+		
+		Claims claims = Jwts.parser()
+				.setSigningKey(key)
+				.parseClaimsJws(token)
+				.getBody();
+		return claims.getSubject();
+		
+	}
+	
+	
+	
 }
