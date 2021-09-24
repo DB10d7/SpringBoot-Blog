@@ -23,7 +23,7 @@ public class AuthController {
 		return new ResponseEntity(HttpStatus.OK);
     }
 	@PostMapping("/login")
-	public void login(@RequestBody LoginRequest loginRequest) {
-        
+	public String login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
     }
 }

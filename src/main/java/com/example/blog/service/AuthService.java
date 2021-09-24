@@ -12,6 +12,7 @@ import com.example.blog.dto.LoginRequest;
 import com.example.blog.dto.RegisterRequest;
 import com.example.blog.model.User;
 import com.example.blog.repository.UserRepository;
+import com.example.blog.security.JwtProvider;
 
 @Service
 public class AuthService {
@@ -22,7 +23,8 @@ public class AuthService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+	@Autowired
+	private JwtProvider jwtProvider;
 	
 	public void signup(RegisterRequest registerRequest) {
 		User user = new User();
@@ -35,10 +37,11 @@ public class AuthService {
 		return passwordEncoder.encode(password);
 	}
 	
-	public void login(LoginRequest loginRequest) {
+	public String login(LoginRequest loginRequest) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
+        return jwtProvider.generateToken(authenticate);
         
     }
 	
